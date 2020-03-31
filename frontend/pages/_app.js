@@ -4,6 +4,7 @@ import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@wui/theme';
+import { setupCsrf } from '../utils/API';
 
 const App = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -13,6 +14,11 @@ const App = ({ Component, pageProps }) => {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   });
+
+  useEffect(() => {
+    // Ensure the CSRF cookie is set.
+    setupCsrf()
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

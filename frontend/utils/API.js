@@ -8,8 +8,8 @@ const API = axios.create({
     'X-REQUESTED-WITH': 'XMLHttpRequest',
     'Content-Type': 'application/json',
     'X-CSRFToken': Cookies.get('csrftoken'),
- },
-})
+  },
+});
 
 const setupCsrf = () => API.post('set_csrf');
 
@@ -21,10 +21,4 @@ const logout = () => API.post('auth/logout');
 
 const refresh = () => API.post('auth/token/refresh');
 
-export {
-  setupCsrf,
-  register,
-  login,
-  logout,
-  refresh,
-}
+export { setupCsrf, register, login, logout, refresh };

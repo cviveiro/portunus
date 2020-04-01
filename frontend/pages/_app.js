@@ -17,7 +17,7 @@ const App = ({ Component, pageProps }) => {
 
   useEffect(() => {
     // Ensure the CSRF cookie is set.
-    setupCsrf()
+    setupCsrf();
   }, []);
 
   return (

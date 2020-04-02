@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.http import require_GET
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -14,8 +14,7 @@ def is_authenticated(request):
     return Response(content)
 
 
-@csrf_exempt
 @ensure_csrf_cookie
-@require_http_methods(["GET", "POST"])
+@require_GET
 def set_csrf(request):
     return HttpResponse("success", status=HTTP_200_OK)

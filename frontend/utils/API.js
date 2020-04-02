@@ -11,7 +11,7 @@ const API = axios.create({
   },
 });
 
-const setupCsrf = () => API.post('set_csrf');
+const setupCsrf = () => API.get('set_csrf');
 
 const register = payload => API.post('auth/register', payload);
 

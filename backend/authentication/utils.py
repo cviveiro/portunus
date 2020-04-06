@@ -108,7 +108,7 @@ def send_password_reset(user):
     # Make a one-time token linked to this user.
     token = ResetToken.for_user(user)
     reset_url = parse.urljoin(
-        settings.BASE_URL, f"/api/auth/reset-password/complete/{user.portunus_uuid}/{token}/",
+        settings.BASE_URL, f"/reset_password/complete/{user.portunus_uuid}/{token}/",
     )
     return _send_email(
         [user.email],

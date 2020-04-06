@@ -21,4 +21,8 @@ const logout = () => API.post('auth/logout/');
 
 const refresh = () => API.post('auth/token/refresh/');
 
-export { setupCsrf, register, login, logout, refresh };
+const resetPassword = payload => API.post('auth/password-reset/', payload);
+
+const completePasswordReset = payload => API.post('auth/password-reset/complete/', payload);
+
+export { setupCsrf, register, login, logout, refresh, resetPassword, completePasswordReset };

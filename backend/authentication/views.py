@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth import authenticate, logout as logout_user
 from django.views.decorators.http import require_POST
+from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes, api_view
@@ -91,6 +92,8 @@ def reset_password(drf_request):
         user = User.objects.get(portunus_uuid=uid)
     except User.DoesNotExist:
         return make_response(False, AUTH_FAILURE)
+    except ValidationError:
+        return make_response(False)
 
     if not check_onetime_token(token, user):
         return make_response(False, INVALID_TOKEN)

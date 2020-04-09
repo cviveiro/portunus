@@ -65,7 +65,6 @@ const ResetPassword = () => {
             onChange={onChangeEmail}
             error={inputError}
           />
-          <Spacer v={8} />
           <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
             Request Reset
           </Button>

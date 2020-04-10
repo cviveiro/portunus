@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import useInputFieldState from '../utils/hooks';
-import { resetPassword } from '../utils/API';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
 import Form from '@wui/layout/form';
 import Link from '@wui/basics/link';
 import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
+
+import useInputFieldState from '@@/utils/hooks';
+import { resetPassword } from '@@/utils/API';
 
 const ResetPassword = () => {
   const [email, onChangeEmail] = useInputFieldState('');
@@ -50,8 +50,8 @@ const ResetPassword = () => {
     return (
       <div>
         <Link href="/login" color="text">
-            <ArrowBackIcon />
-            <sup>Back to login</sup>
+          <ArrowBackIcon />
+          <sup>Back to login</sup>
         </Link>
         <Spacer v={32} />
         <Typography variant="h4">Reset Password</Typography>

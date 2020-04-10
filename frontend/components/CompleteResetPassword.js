@@ -7,8 +7,9 @@ import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
-import useInputFieldState from '../utils/hooks';
-import { completePasswordReset } from '../utils/API';
+
+import useInputFieldState from '@@/utils/hooks';
+import { completePasswordReset } from '@@/utils/API';
 
 const ResetPasswordComplete = ({ uuid, token }) => {
   const [newPassword1, onChangePassword1] = useInputFieldState('');
@@ -21,7 +22,7 @@ const ResetPasswordComplete = ({ uuid, token }) => {
     const errors = {};
 
     if (!newPassword1) {
-      errors.firstPassword = 'Please enter your email';
+      errors.firstPassword = 'Please enter your new password';
     }
 
     if (newPassword1 !== newPassword2) {

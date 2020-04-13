@@ -65,9 +65,9 @@ def get_valid_redirect_url(url):
 
 def blacklist_token(token_str):
     if token_str:
+        # We don't verify the token so that, no matter what, we blacklist it.
+        token = RefreshToken(token_str, verify=False)
         try:
-            # We don't verify the token so that, no matter what, we blacklist it.
-            token = RefreshToken(token_str, verify=False)
             token.blacklist()
         except TokenError:
             # Token is already blacklisted.

@@ -88,11 +88,7 @@ def check_and_change_password(drf_request, user, new_password):
         validate_password(new_password)
     except ValidationError as e:
         return make_response(
-            False,
-            {
-                "error": INVALID_PASSWORD,
-                "validation_error": str(e.error_list[0]).strip("[]'\""),
-            },
+            False, {"error": INVALID_PASSWORD, "validation_error": e.messages[0],},
         )
 
     blacklist_user_tokens(user)

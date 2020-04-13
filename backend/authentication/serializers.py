@@ -3,6 +3,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from trench.views.base import MFACredentialsLoginMixin
 
 from authentication.social_utils import is_valid_existing_account, is_valid_token
 from shared.email import PortunusMailer
@@ -25,7 +26,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         )
 
 
-class LoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(MFACredentialsLoginMixin, serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("email", "password")

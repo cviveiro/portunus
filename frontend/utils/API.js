@@ -41,3 +41,8 @@ export const completePasswordReset = payload => API.post('auth/password-reset/co
 export const changeUserEmail = payload => API.post('auth/change-email/', payload);
 
 export const changePassword = payload => API.post('auth/change-password/', payload);
+
+export const activateMFA = method => API.post(`auth/${method}/activate/`);
+
+export const completeActivateMFA = (method, payload) =>
+  API.post(`auth/${method}/activate/confirm/`, payload);

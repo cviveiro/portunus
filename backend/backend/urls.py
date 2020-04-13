@@ -20,6 +20,8 @@ from . import views
 
 api_patterns = [
     path("auth/", include("authentication.urls")),
+    path("auth/", include("trench.urls")),
+    path("auth/", include("trench.urls.simplejwt")),
     path("is_authenticated/", views.is_authenticated, name="is_authenticated"),
     path("set_csrf/", views.set_csrf, name="set_csrf_cookie"),
 ]

@@ -23,7 +23,7 @@ const Login = () => {
     const errors = {};
 
     if (!email) {
-      errors.email = 'Please enter your email';
+      errors.email = 'Please enter your email.';
     }
 
     if (!password) {

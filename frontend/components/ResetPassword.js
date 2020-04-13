@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const validateForm = () => {
     let error = '';
     if (!email) {
-      error = 'Please enter your email';
+      error = 'Please enter your email.';
     }
 
     setInputError(error);
@@ -41,7 +41,9 @@ const ResetPassword = () => {
       setSuccess(true);
       setValidationError(null);
     } catch (error) {
-      setValidationError('ERROR');
+      setValidationError(
+        'Please enter the email associated with your MetLife Legal Plans account.',
+      );
       setSuccess(false);
     }
   };

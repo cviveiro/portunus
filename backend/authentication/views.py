@@ -63,7 +63,7 @@ def change_password(drf_request):
     new_password = drf_request.data.get("new_password")
 
     if not user.check_password(password):
-        return make_response(False, AUTH_FAILURE)
+        return make_response(False, {"error": AUTH_FAILURE})
 
     return check_and_change_password(drf_request, user, new_password)
 
@@ -89,15 +89,16 @@ def reset_password(drf_request):
     uid = drf_request.data.get("portunus_uuid")
     token = drf_request.data.get("token")
     new_password = drf_request.data.get("new_password")
+
     try:
         user = User.objects.get(portunus_uuid=uid)
     except User.DoesNotExist:
-        return make_response(False, AUTH_FAILURE)
+        return make_response(False, {"error": AUTH_FAILURE})
     except ValidationError:
         return make_response(False)
 
     if not check_onetime_token(token, user):
-        return make_response(False, INVALID_TOKEN)
+        return make_response(False, {"error": INVALID_TOKEN})
 
     return check_and_change_password(drf_request, user, new_password)
 

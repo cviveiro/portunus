@@ -66,7 +66,8 @@ def get_valid_redirect_url(url):
 def blacklist_token(token_str):
     if token_str:
         try:
-            token = RefreshToken(token_str)
+            # We don't verify the token so that, no matter what, we blacklist it.
+            token = RefreshToken(token_str, verify=False)
             token.blacklist()
         except TokenError:
             # Token is already blacklisted.
@@ -83,22 +84,22 @@ def create_user(portunus_uuid):
 
 
 def check_and_change_password(drf_request, user, new_password):
-    if not is_password_valid(new_password):
-        return make_response(False, error_msg=INVALID_PASSWORD)
+    try:
+        validate_password(new_password)
+    except ValidationError as e:
+        return make_response(
+            False,
+            {
+                "error": INVALID_PASSWORD,
+                "validation_error": str(e.error_list[0]).strip("[]'\""),
+            },
+        )
 
     blacklist_user_tokens(user)
     user.set_password(new_password)
     user.save()
 
     return make_response(True)
-
-
-def is_password_valid(password):
-    try:
-        validate_password(password)
-        return True
-    except ValidationError:
-        return False
 
 
 def check_onetime_token(token_str, user):
@@ -118,12 +119,10 @@ def check_onetime_token(token_str, user):
 
     try:
         # This will verify that the token is valid and hasn't expired.
-        token = ResetToken(token_str)
+        _ = ResetToken(token_str)
     except TokenError:
         return False
 
-    # Blacklist the token so that it can only get used once.
-    token.blacklist()
     return True
 
 

@@ -35,15 +35,14 @@ const Login = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!validateForm()) {
       return;
     }
 
     let response;
     try {
-      response = await login({
+      response = login({
         email: email.toLowerCase(),
         password,
         next,

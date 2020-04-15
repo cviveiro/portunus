@@ -2,8 +2,6 @@ import Router from 'next/router';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-let accessToken = '';
-
 // Refresh the access token every 4 minutes (in milliseconds).
 const tokenRefreshInterval = 4 * 60 * 1000;
 
@@ -16,23 +14,11 @@ const API = axios.create({
   },
 });
 
-const secureAPI = axios.create({
-  baseURL: '/api/',
-  responseType: 'json',
-  headers: {
-    'X-REQUESTED-WITH': 'XMLHttpRequest',
-    'Content-Type': 'application/json',
-  },
-});
-
 API.interceptors.request.use(request => {
   request.headers['X-CSRFToken'] = Cookies.get('csrftoken');
-  return request;
-});
-
-secureAPI.interceptors.request.use(request => {
-  request.headers['X-CSRFToken'] = Cookies.get('csrftoken');
-  request.headers['Authorization'] = `Bearer ${window.accessToken}`;
+  if (window.accessToken) {
+    request.headers['Authorization'] = `Bearer ${window.accessToken}`;
+  }
   return request;
 });
 
@@ -40,9 +26,17 @@ const setupCsrf = () => API.get('set_csrf/');
 
 const register = payload => API.post('auth/register/', payload);
 
-const login = payload => API.post('auth/login/', payload);
+const login = async payload => {
+  const response = await API.post('auth/login/', payload);
+  refreshToken();
+  return response;
+};
 
-const logout = () => API.post('auth/logout/');
+const logout = async () => {
+  const response = await API.post('auth/logout/');
+  window.accessToken = '';
+  return response;
+};
 
 const resetPassword = payload => API.post('auth/password-reset/', payload);
 
@@ -54,14 +48,17 @@ const refreshToken = () => {
       window.accessToken = response.data.access;
     });
   } catch (error) {
-    console.log(error);
+    window.accessToken = '';
     Router.push('/login');
   }
 };
 
 const startTokenRefresher = () => {
-  refreshToken();
-  window.timerId = setInterval(refreshToken, tokenRefreshInterval);
+  // Don't start another timer if we already have one going.
+  if (!window.timerId) {
+    refreshToken();
+    window.timerId = setInterval(refreshToken, tokenRefreshInterval);
+  }
 };
 
 export {
@@ -72,4 +69,5 @@ export {
   resetPassword,
   completePasswordReset,
   startTokenRefresher,
+  refreshToken,
 };

@@ -83,6 +83,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 DEFAULT_REDIRECT_URL = prod_required_env(
-    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:4000"
+    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3000"
 )
 VALID_REDIRECT_HOSTNAMES = ["localhost"]

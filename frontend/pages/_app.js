@@ -4,7 +4,7 @@ import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@wui/theme';
-import { setupCsrf } from '../utils/API';
+import { setupCsrf, startTokenRefresher } from '../utils/API';
 
 const App = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -18,6 +18,11 @@ const App = ({ Component, pageProps }) => {
   useEffect(() => {
     // Ensure the CSRF cookie is set.
     setupCsrf();
+  }, []);
+
+  useEffect(() => {
+    // Make sure we keep the access token up to date.
+    startTokenRefresher();
   }, []);
 
   return (

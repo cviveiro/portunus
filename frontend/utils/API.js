@@ -32,10 +32,11 @@ const login = async payload => {
   return response;
 };
 
-const logout = async () => {
-  const response = await API.post('auth/logout/');
-  window.accessToken = '';
-  return response;
+const logout = () => {
+  API.post('auth/logout/').then(function (response) {
+    window.accessToken = '';
+    return response;
+  });
 };
 
 const resetPassword = payload => API.post('auth/password-reset/', payload);

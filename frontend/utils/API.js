@@ -1,9 +1,5 @@
-import Router from 'next/router';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
-// Refresh the access token every 4 minutes (in milliseconds).
-const tokenRefreshInterval = 4 * 60 * 1000;
 
 const API = axios.create({
   baseURL: '/api/',
@@ -26,49 +22,14 @@ const setupCsrf = () => API.get('set_csrf/');
 
 const register = payload => API.post('auth/register/', payload);
 
-const login = async payload => {
-  const response = await API.post('auth/login/', payload);
-  refreshToken();
-  return response;
-};
+const login = async payload => API.post('auth/login/', payload);
 
-const logout = () => {
-  API.post('auth/logout/').then(function (response) {
-    window.accessToken = '';
-    return response;
-  });
-};
+const logout = () => API.post('auth/logout/');
 
 const resetPassword = payload => API.post('auth/password-reset/', payload);
 
 const completePasswordReset = payload => API.post('auth/password-reset/complete/', payload);
 
-const refreshToken = () => {
-  try {
-    API.post('auth/token/refresh/').then(function (response) {
-      window.accessToken = response.data.access;
-    });
-  } catch (error) {
-    window.accessToken = '';
-    Router.push('/login');
-  }
-};
+const refreshToken = () => API.post('auth/token/refresh/');
 
-const startTokenRefresher = () => {
-  // Don't start another timer if we already have one going.
-  if (!window.timerId) {
-    refreshToken();
-    window.timerId = setInterval(refreshToken, tokenRefreshInterval);
-  }
-};
-
-export {
-  setupCsrf,
-  register,
-  login,
-  logout,
-  resetPassword,
-  completePasswordReset,
-  startTokenRefresher,
-  refreshToken,
-};
+export { setupCsrf, register, login, logout, resetPassword, completePasswordReset, refreshToken };

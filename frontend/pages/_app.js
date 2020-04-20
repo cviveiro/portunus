@@ -4,7 +4,9 @@ import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@wui/theme';
-import { setupCsrf, startTokenRefresher } from '@@/utils/API';
+import { setupCsrf, refreshToken } from '@@/utils/API';
+
+import { tokenFetcher } from '@@/utils/tokens';
 
 const App = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -21,8 +23,8 @@ const App = ({ Component, pageProps }) => {
   }, []);
 
   useEffect(() => {
-    // Make sure we keep the access token up to date.
-    startTokenRefresher();
+    // Ensure we're keeping track of the access token automatically.
+    tokenFetcher.start(refreshToken);
   }, []);
 
   return (

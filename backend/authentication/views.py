@@ -98,7 +98,11 @@ def change_email(request):
 @permission_classes([IsAuthenticated])
 def change_email(drf_request):
     user = drf_request.user
+    password = drf_request.data.get("password")
     new_email = drf_request.data.get("new_email")
+
+    if not user.check_password(password):
+        return make_response(False, {"error": AUTH_FAILURE})
 
     # TODO get a confirmation email going with a link that will
     # verify the email address.

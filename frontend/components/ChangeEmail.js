@@ -12,6 +12,8 @@ import Success from '@@/components/Success';
 
 const authFailure = 'auth_failure'
 
+const authFailure = 'auth_failure';
+
 const ChangeEmailForm = () => {
   const [newEmail, onChangeNewEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');

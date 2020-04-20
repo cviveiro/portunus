@@ -95,8 +95,25 @@ def change_email(request):
 
 
 @api_view(["POST"])
-def request_password_reset(request):
-    email = request.data.get("email")
+@permission_classes([IsAuthenticated])
+def change_email(drf_request):
+    user = drf_request.user
+    new_email = drf_request.data.get("new_email")
+
+    # TODO get a confirmation email going with a link that will
+    # verify the email address.
+    try:
+        user.email = new_email
+    except ValidationError:
+        return make_response(False)
+    user.save()
+
+    return make_response(True)
+
+
+@api_view(["POST"])
+def request_password_reset(drf_request):
+    email = drf_request.data.get("email")
     if not email:
         return make_response(False)
 

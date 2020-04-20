@@ -10,8 +10,7 @@ import Typography from '@wui/basics/typography';
 
 import useInputFieldState from '@@/utils/hooks';
 import { completePasswordReset } from '@@/utils/API';
-
-const invalidPasswordError = 'invalid_password';
+import invalidPasswordError from '@@/utils/constants';
 
 const ResetPasswordComplete = ({ uuid, token }) => {
   const [newPassword1, onChangePassword1] = useInputFieldState('');

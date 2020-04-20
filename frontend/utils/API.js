@@ -48,3 +48,5 @@ export const resetPassword = payload => API.post('auth/password-reset/', payload
 export const completePasswordReset = payload => API.post('auth/password-reset/complete/', payload);
 
 export const changeUserEmail = payload => API.post('auth/change-email/', payload);
+
+export const changePassword = payload => API.post('auth/change-password/', payload);

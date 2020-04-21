@@ -106,11 +106,10 @@ def change_email(drf_request):
 
     # TODO get a confirmation email going with a link that will
     # verify the email address.
-    try:
-        user.email = new_email
-    except ValidationError:
+    serializer = ChangeEmailSerializer(instance=user, data={"email": new_email})
+
+    if not serializer.is_valid():
         return make_response(False)
-    user.save()
 
     return make_response(True)
 

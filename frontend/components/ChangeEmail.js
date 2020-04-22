@@ -10,7 +10,7 @@ import useInputFieldState from '@@/utils/hooks';
 import { refresh, changeUserEmail } from '@@/utils/API';
 import Success from '@@/components/Success';
 
-import { authFailure } from '@@/utils/constants';
+import { AUTH_FAILURE } from '@@/utils/constants';
 
 const ChangeEmailForm = () => {
   const [newEmail, onChangeNewEmail] = useInputFieldState('');
@@ -37,7 +37,7 @@ const ChangeEmailForm = () => {
   const handleError = error => {
     if (error.response && error.response.data) {
       const submitError =
-        error.response.data.error === authFailure
+        error.response.data.error === AUTH_FAILURE
           ? 'Your password did not match the one we have for your account. Try again.'
           : 'The email you entered was not valid';
       setInputErrors({ submitError });

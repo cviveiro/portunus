@@ -8,7 +8,7 @@ import Typography from '@wui/basics/typography';
 
 import useInputFieldState from '@@/utils/hooks';
 import { changePassword, refresh } from '@@/utils/API';
-import { invalidPasswordError } from '@@/utils/constants';
+import { INVALID_PASSWORD } from '@@/utils/constants';
 
 const ChangePasswordForm = () => {
   const [password, onChangePassword] = useInputFieldState('');
@@ -37,32 +37,40 @@ const ChangePasswordForm = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async e => {
+  const handleError = error => {
+    if (error.response && error.response.data) {
+      const submitError =
+        error.response.data.error === INVALID_PASSWORD
+          ? error.response.data.validation_error
+          : 'Your current password did not match the one we have on file. Try again.';
+      setInputErrors({ submitError });
+    } else {
+      setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
+    }
+    setSuccess(false);
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
     if (!validateForm()) {
       return;
     }
-    try {
-      await refresh();
-      await changePassword({
+
+    refresh().then(() => {
+      changePassword({
         password,
         new_password: newPassword,
-      });
-      setSuccess(true);
-    } catch (error) {
-      const submitError =
-        error.response.data.error === invalidPasswordError
-          ? error.response.data.validation_error
-          : 'Your current password did not match the one we have on file. Try again.';
-      setInputErrors({ submitError });
-    }
+      })
+        .then(() => setSuccess(true))
+        .catch(handleError);
+    });
   };
 
   const successMessage = () => {
     return (
       <div>
         <Typography variant="h4">Change Password</Typography>
-        <body>Your password has been changed!</body>
+        <Typography variant="h7">Your password has been changed!</Typography>
       </div>
     );
   };

@@ -70,7 +70,7 @@ const ChangePasswordForm = () => {
     return (
       <div>
         <Typography variant="h4">Change Password</Typography>
-        <Typography variant="h7">Your password has been changed!</Typography>
+        <Typography variant="body1">Your password has been changed!</Typography>
       </div>
     );
   };

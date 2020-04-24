@@ -10,8 +10,6 @@ import useInputFieldState from '@@/utils/hooks';
 import { refresh, changeUserEmail } from '@@/utils/API';
 import Success from '@@/components/Success';
 
-const authFailure = 'auth_failure'
-
 const authFailure = 'auth_failure';
 
 const ChangeEmailForm = () => {

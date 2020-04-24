@@ -96,10 +96,10 @@ def change_email(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def change_email(drf_request):
-    user = drf_request.user
-    password = drf_request.data.get("password")
-    new_email = drf_request.data.get("new_email")
+def change_email(request):
+    user = request.user
+    password = request.data.get("password")
+    new_email = request.data.get("new_email")
 
     if not user.check_password(password):
         return make_response(False, {"error": AUTH_FAILURE})
@@ -115,8 +115,8 @@ def change_email(drf_request):
 
 
 @api_view(["POST"])
-def request_password_reset(drf_request):
-    email = drf_request.data.get("email")
+def request_password_reset(request):
+    email = request.data.get("email")
     if not email:
         return make_response(False)
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
@@ -9,6 +9,7 @@ import Typography from '@wui/basics/typography';
 import useInputFieldState from '@@/utils/hooks';
 import { changePassword, refresh } from '@@/utils/API';
 import { INVALID_PASSWORD } from '@@/utils/constants';
+import Success from '@@/components/Success';
 
 const ChangePasswordForm = () => {
   const [password, onChangePassword] = useInputFieldState('');
@@ -66,54 +67,49 @@ const ChangePasswordForm = () => {
     });
   };
 
-  const successMessage = () => {
-    return (
-      <div>
-        <Typography variant="h4">Change Password</Typography>
-        <Typography variant="body1">Your password has been changed!</Typography>
-      </div>
-    );
-  };
+  if (success) {
+    return <Success header="Change Password" message="Your password has been changed!" />;
+  }
 
-  const changeForm = () => {
-    return (
-      <div>
-        <Typography variant="h4">Change Password</Typography>
-        <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
-          <Textbox
-            name="current_password"
-            type="password"
-            label="Current Password"
-            value={password}
-            onChange={onChangePassword}
-            error={inputErrors.password}
-          />
-          <Textbox
-            name="new_password"
-            type="password"
-            label="New Password"
-            value={newPassword}
-            onChange={onChangeNewPassword}
-            error={inputErrors.newPassword}
-          />
-          <Textbox
-            name="new_password_2"
-            type="password"
-            label="Confirm New Password"
-            value={newPassword2}
-            onChange={onChangeNewPassword2}
-            error={inputErrors.newPassword2}
-          />
-          <Spacer v={8} />
-          <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
-            Change Password
-          </Button>
-        </Form>
-      </div>
-    );
-  };
+  return (
+    <div>
+      <Typography variant="h4">Change Password</Typography>
 
-  return success ? successMessage() : changeForm();
+      <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
+        <Textbox
+          name="current_password"
+          type="password"
+          label="Current Password"
+          value={password}
+          onChange={onChangePassword}
+          error={inputErrors.password}
+        />
+
+        <Textbox
+          name="new_password"
+          type="password"
+          label="New Password"
+          value={newPassword}
+          onChange={onChangeNewPassword}
+          error={inputErrors.newPassword}
+        />
+
+        <Textbox
+          name="new_password_2"
+          type="password"
+          label="Confirm New Password"
+          value={newPassword2}
+          onChange={onChangeNewPassword2}
+          error={inputErrors.newPassword2}
+        />
+
+        <Spacer v={8} />
+        <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
+          Change Password
+        </Button>
+      </Form>
+    </div>
+  );
 };
 
 export default ChangePasswordForm;

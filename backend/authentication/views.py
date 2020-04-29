@@ -95,26 +95,6 @@ def change_email(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def change_email(request):
-    user = request.user
-    password = request.data.get("password")
-    new_email = request.data.get("new_email")
-
-    if not user.check_password(password):
-        return make_response(False, {"error": AUTH_FAILURE})
-
-    # TODO get a confirmation email going with a link that will
-    # verify the email address.
-    serializer = ChangeEmailSerializer(instance=user, data={"email": new_email})
-
-    if not serializer.is_valid():
-        return make_response(False)
-
-    return make_response(True)
-
-
-@api_view(["POST"])
 def request_password_reset(request):
     email = request.data.get("email")
     if not email:

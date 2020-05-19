@@ -6,6 +6,7 @@ from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
+from django.core.validators import validate_email
 
 from authentication.utils import blacklist_user_tokens
 
@@ -21,11 +22,12 @@ from .utils import (
     REFRESH_TOKEN_SESSION_KEY,
     check_and_change_password,
     check_onetime_token,
+    check_change_email_token,
     make_response,
     get_valid_redirect_url,
     check_password_for_auth_change,
 )
-from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL
+from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL, EMAIL_EXISTS
 from shared.email import PortunusMailer
 from shared.permissions import IsSameUserOrAdmin
 
@@ -68,7 +70,7 @@ def change_password(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def change_email(request):
+def request_email_change(request):
     user = request.user
     password = request.data.get("password")
     new_email = request.data.get("new_email")
@@ -77,8 +79,28 @@ def change_email(request):
     if response is not None:
         return response
 
-    # TODO get a confirmation email going with a link that will
-    # verify the email address.
+    try:
+        validate_email(new_email)
+        existing_user = User.objects.filter(email=request.data["new_email"]).first()
+        if existing_user:
+            return make_response(False, {"error": EMAIL_EXISTS})
+    except ValidationError:
+        return make_response(False, {"error": INVALID_EMAIL})
+
+    PortunusMailer.send_change_email_confirmation(user, new_email)
+    return make_response()
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def update_email(request):
+    user = request.user
+    token = request.data.get("token")
+    new_email = request.data.get("newEmail")
+
+    if not check_change_email_token(token, user):
+        return make_response(False, {"error": INVALID_TOKEN})
+
     serializer = UserSerializer(instance=user, data={"email": new_email})
 
     if not serializer.is_valid():

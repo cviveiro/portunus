@@ -16,7 +16,7 @@ import { refresh, changeUserEmail } from '@@/utils/API';
 import Page from '@@/components/Page';
 import Success from '@@/components/Success';
 
-import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
+import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT, EMAIL_EXISTS } from '@@/utils/constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,11 +56,14 @@ const ChangeEmail = () => {
         window.location = '/';
         return;
       }
-
-      const submitError =
-        error.response.data.error === AUTH_FAILURE
-          ? 'Your password did not match the one we have for your account. Try again.'
-          : 'The email you entered was not valid.';
+      let submitError;
+      if (error.response.data.error === EMAIL_EXISTS) {
+        submitError = 'A user with that email address already exists. Try again.';
+      } else if (error.response.data.error === AUTH_FAILURE) {
+        submitError = 'Your password did not match the one we have for your account. Try again.';
+      } else {
+        submitError = 'The email you entered was not valid.';
+      }
       setInputErrors({ submitError });
     } else {
       setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
@@ -89,7 +92,10 @@ const ChangeEmail = () => {
       <Page>
         <Container maxWidth="md" className={classes.root}>
           <Spacer v={32} />
-          <Success header="Change Email" message="Your email has been changed!" />
+          <Success
+            header="Change Email"
+            message="Check your email for a link to verify your new email address."
+          />
         </Container>
       </Page>
     );

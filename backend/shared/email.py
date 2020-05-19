@@ -1,7 +1,7 @@
 from urllib import parse
 
 from .mailer import Mailer
-from authentication.utils import ResetToken
+from authentication.utils import ResetToken, ChangeEmailToken
 from backend.settings import SUPPORT_PHONE_NUMBER, BASE_URL
 
 
@@ -49,4 +49,17 @@ class PortunusMailer(Mailer):
             "Account Created",
             "new_account",
             {"user": user, "new_account_url": new_account_url},
+        )
+
+    @classmethod
+    def send_change_email_confirmation(cls, user, new_email):
+        token = ChangeEmailToken.for_user(user)
+        confirm_new_email_url = parse.urljoin(
+            BASE_URL, f"/change-email/complete/{token}/{new_email}/",
+        )
+        cls.send_email(
+            [new_email],
+            "Change Email Request",
+            "change_email",
+            {"user": user, "confirm_new_email_url": confirm_new_email_url},
         )

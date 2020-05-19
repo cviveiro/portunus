@@ -1,0 +1,9 @@
+{% if user.name %}
+Hello {{ user.name }},
+
+{% endif %}
+You are receiving this message because someone requested to change the email address associated with your MetLife Legal Plans account. If you did not make this request, please ignore this email.
+
+Please confirm your email address by following the link {{ confirm_new_email_url }}
+
+Thank you for using MetLife Legal Plans!

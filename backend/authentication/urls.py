@@ -25,6 +25,7 @@ urlpatterns = [
         name="admin_password_reset",
     ),
     path("password-reset/complete/", views.reset_password, name="password_reset_complete"),
-    path("change-email/", views.change_email, name="change_email"),
+    path("change-email/", views.request_email_change, name="change_email"),
+    path("change-email/complete/", views.update_email, name="update_email"),
     path("send-new-user-email", views.send_new_user_email, name="send_new_user_email"),
 ]

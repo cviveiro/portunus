@@ -22,7 +22,7 @@ from shared.utils.tasks import enqueue
 from .models import User
 from .errors import INVALID_PASSWORD, AUTH_FAILURE, AUTH_CHANGE_LOCKOUT
 from .token import ResetToken
-
+from .change_email_token import ChangeEmailToken
 
 REFRESH_TOKEN_SESSION_KEY = "refresh_token"
 
@@ -160,3 +160,16 @@ def generate_axes_lockout_response(request, credentials):
         f"Too many failed login attempts, check your email to choose a new password."
     )
     return make_response(data={api_settings.NON_FIELD_ERRORS_KEY: error_message}, status=403)
+
+
+def check_change_email_token(token_str, user):
+    if not token_str:
+        return False
+
+    try:
+        # This will verify that the token is valid and hasn't expired.
+        token = ChangeEmailToken(token_str)
+        return token["user_id"] == str(user.portunus_uuid)
+
+    except TokenError:
+        return False
